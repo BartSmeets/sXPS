@@ -109,3 +109,12 @@ class FitResult:
             else:
                 plt.plot(data.energy, bg+value, label=key[:-1], color=colour)
                 plt.fill_between(data.energy, bg, bg + value, alpha=0.3, color=colour)
+
+
+    def display(self):
+        print(self.result.fit_report())
+
+
+    def save(self, filename):
+        with open(filename, 'w') as f:
+            f.write(self.result.fit_report())
