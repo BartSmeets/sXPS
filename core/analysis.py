@@ -3,10 +3,26 @@ from lmfitxps import models
 import lmfit
 
 class Data:
-    def __init__(self, file, worksheet):
+    '''
+    Data object
+    '''
+    def __init__(self, file:str, worksheet:str):
         '''
-        Load data
+        Load data from excel sheet
+
+        # Arguments
+
+        **file**: file name of the data (excel sheet) that must be loaded
+
+        **worksheet**: worksheet to load
+
+        # Defines
+
+        **models**: dictionary containing the model elements (initially background; peaks can be added)
+
+        **pars**: parameter object
         '''
+
         self.__load_data(file, worksheet)
 
         # Prepare fit
@@ -18,12 +34,38 @@ class Data:
 
 
     def __load_data(self, file, worksheet):
+        '''
+        Load the data
+
+        # Arguments
+
+        **file**: file name of the data (excel sheet) that must be loaded
+
+        **worksheet**: worksheet to load
+
+        # Defines
+
+        **original_directory**: original data directory
+
+        **scan**: scan name
+
+        **xray**: name of the x-ray source
+
+        **energy**: array containing the binding energies
+
+        **counts**: array containting the counts ont he detector
+
+        '''
+
+
         import pandas as pd
+
+        # read file
         excel = file
         df = pd.read_excel(excel, worksheet)
-
-        self.original_directory = df.iloc[2, 0]
+        
         # Extract data from directory
+        self.original_directory = df.iloc[2, 0]
         split = self.original_directory.split("\\")
         self.scan = split[-1][:-4]  # first select split, then remove the file extension
         self.xray = split[-3]
@@ -39,6 +81,29 @@ class Data:
 
 
     def add_singlet(self, key, pos):
+        '''
+        Adds singlet peak to models
+
+        # Arguments
+        **key**: key of the peak
+
+        **pos**: expected position of the peak
+
+        # Defines
+        **models[key]**: adds peak to model
+
+        **pars[{key}_center]**: position of the peak
+
+        **pars[{key}_amplitude]**: amplitude of the peak
+
+        **pars[{key}_sigma]**: broadening of the Doniach-Sunjic 
+
+        **pars[{key}_gaussian_sigma]**: broadening of the gaussian kernel
+
+        **pars[{key}_gamma]**: asymmetry of the Doniach-Sunjic 
+        '''
+
+
         self.models[key] = models.ConvGaussianDoniachSinglett(prefix=f'{key}_')
 
         self.pars.add(f'{key}_center', value=pos, min=np.min(self.energy), max=np.max(self.energy))
@@ -51,6 +116,38 @@ class Data:
 
 
     def add_doublet(self, key, pos, delta):
+        '''
+        Adds doublet peaks to models
+
+        # Arguments
+        **key**: key of the main peak
+
+        **pos**: expected position of the main peak
+
+        **delta**: separation of the soublet
+
+        # Defines
+
+        **models[key]**: adds peak to model
+
+        **pars[{key}_center]**: position of the main peak
+
+        **pars[{key}_soc]**: separation of the peaks
+
+        **pars[{key}_amplitude]**: amplitude of the main peak
+
+        **pars[{key}_sigma]**: broadening of the Doniach-Sunjic 
+
+        **pars[{key}_gaussian_sigma]**: broadening of the gaussian kernel
+
+        **pars[{key}_gamma]**: asymmetry of the Doniach-Sunjic 
+
+        **pars[{key}_height_ratio]**: ratio of the amplitude of the two peaks
+
+        **pars[{key}_fct_coster_kronig]**: ratio of the widths of the two peaks 
+        '''
+
+
         self.models[key] = models.ConvGaussianDoniachDublett(prefix=f'{key}_')
 
         self.pars.add(f'{key}_center', value=pos, min=np.min(self.energy), max=np.max(self.energy))
@@ -66,17 +163,50 @@ class Data:
         
 
     def fit(self):
+        '''
+        Performs fit
+        '''
+
         return FitResult(self)
     
 
 class FitResult:
+    '''
+    Fit Result Class
+    '''
     def __init__(self, data):
+        '''
+        Runs the fit on the procided data object
+
+        # Arguments
+
+        **data**: data object
+
+        # Defines
+
+        **data**: stores a copy of data within this class
+
+        **result**: lmfit result object
+
+        **comps**: dictionary of the different components of the fitting results, i.e., models
+        '''
+
+
         self.data = data
         self.result = self.__run_fit()
         self.comps = self.result.eval_components()
         
     
     def __run_fit(self):
+        '''
+        Runs the fit
+
+        # Returns
+
+        **out**: lmfit result object
+        '''
+
+
         data = self.data
         # Define model from dictionary
         for _, obj in data.models.items():
@@ -93,6 +223,9 @@ class FitResult:
     
 
     def plot(self):
+        '''
+        Plot the individual components using matplotlib.pyplot
+        '''
         import matplotlib.pyplot as plt
         import toml
 
@@ -112,9 +245,18 @@ class FitResult:
 
 
     def display(self):
+        '''
+        Print the fit report
+        '''
         print(self.result.fit_report())
 
 
     def save(self, filename):
+        '''
+        Save the fit report to a text file
+
+        # Argument
+        **filename**: file name of the target file
+        '''
         with open(filename, 'w') as f:
             f.write(self.result.fit_report())
