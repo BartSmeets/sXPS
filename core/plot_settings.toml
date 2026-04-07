@@ -1,0 +1,14 @@
+[colours]
+
+[colours.core]
+darkBlue = '#1A3B62'
+blue = '#1D8DB0'
+red = '#B01C47'
+green = '#1CB02D'
+
+[colours.special]
+green532 = '#04D924'
+
+[fontsize]
+main = 16
+sub = 12
