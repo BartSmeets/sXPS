@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name='sxps'
+dynamic = ["version"]
+dependencies = ['numpy','matplotlib', 'lmfit', 'lmfitxps', 'pandas']
+readme='README.md'
+authors=[{name='Bart J. B. Smeets', email='bart.smeets.qsp@kuleuven.be'}]
+description='solve XPS: wrapper for lmfitXPS'
+
+[tool.setuptools]
+packages = ["sxps"]
+
+[tool.setuptools.dynamic]
+version = {attr = "sxps.__version__"}
