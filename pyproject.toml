@@ -3,8 +3,8 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-version = "0.1.0"
-dependencies = ['numpy','matplotlib', 'toml', 'lmfit', 'lmfitxps', 'pandas']
+dynamic = "version"
+dependencies = ['numpy','matplotlib', 'lmfit', 'lmfitxps', 'pandas']
 name='sxps'
 readme='README.md'
 version = '0.1.0'
@@ -13,3 +13,6 @@ description='solve XPS: wrapper for lmfitXPS'
 
 [tool.setuptools]
 packages = ["sxps"]
+
+[tool.setuptools.dynamic]
+version = {attr = "sxps.__version__"}

@@ -220,28 +220,6 @@ class FitResult:
         y = data.counts
         out = mod.fit(y, data.pars, y=y, x=x, weights=1 /(np.sqrt(y)))
         return out
-    
-
-    def plot(self):
-        '''
-        Plot the individual components using matplotlib.pyplot
-        '''
-        import matplotlib.pyplot as plt
-        import toml
-
-        settings = toml.load('core\\plot_settings.toml')
-
-        data = self.data
-        comps = self.comps
-        bg = comps['shirley_']
-        plt.plot(data.energy, bg, c='black', label='Shirley background')
-
-        for (key, value), (_, colour) in zip(comps.items(), settings['colours']['core'].items()):
-            if key == 'shirley_':
-                continue
-            else:
-                plt.plot(data.energy, bg+value, label=key[:-1], color=colour)
-                plt.fill_between(data.energy, bg, bg + value, alpha=0.3, color=colour)
 
 
     def display(self):
