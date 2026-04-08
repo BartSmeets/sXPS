@@ -3,9 +3,9 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+name='sxps'
 dynamic = "version"
 dependencies = ['numpy','matplotlib', 'lmfit', 'lmfitxps', 'pandas']
-name='sxps'
 readme='README.md'
 version = '0.1.0'
 authors=[{name='Bart J. B. Smeets', email='bart.smeets.qsp@kuleuven.be'}]
