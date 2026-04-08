@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name='sxps'
-dynamic = "version"
+dynamic = ["version"]
 dependencies = ['numpy','matplotlib', 'lmfit', 'lmfitxps', 'pandas']
 readme='README.md'
 authors=[{name='Bart J. B. Smeets', email='bart.smeets.qsp@kuleuven.be'}]
