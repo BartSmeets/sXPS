@@ -218,7 +218,8 @@ class FitResult:
         # Run fit
         x = data.energy
         y = data.counts
-        out = mod.fit(y, data.pars, y=y, x=x, weights=1 /(np.sqrt(y)))
+        weights = 1 /(np.sqrt(y))
+        out = mod.fit(y, data.pars, y=y, x=x, weights=weights)
         return out
 
 
