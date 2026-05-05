@@ -110,9 +110,9 @@ class Data:
         
         # Defaults
         self.pars.add(f'{key}_amplitude', value=np.max(self.counts), min=0.0)
-        self.pars.add(f'{key}_sigma', value=0.2, min=0.05, max=3)
-        self.pars.add(f'{key}_gaussian_sigma', value=0.1, min=1e-3)
-        self.pars.add(f'{key}_gamma', value=0.0, min=1e-3, max=1.0)
+        self.pars.add(f'{key}_sigma', value=0.2, min=1e-6)
+        self.pars.add(f'{key}_gaussian_sigma', value=0.1, min=1e-6)
+        self.pars.add(f'{key}_gamma', value=0.0, min=0, max=1.0)
 
 
     def add_doublet(self, key, pos, delta):
@@ -218,7 +218,8 @@ class FitResult:
         # Run fit
         x = data.energy
         y = data.counts
-        out = mod.fit(y, data.pars, y=y, x=x, weights=1 /(np.sqrt(y)))
+        weights = 1 /(np.sqrt(y))
+        out = mod.fit(y, data.pars, y=y, x=x, weights=weights)
         return out
 
 
